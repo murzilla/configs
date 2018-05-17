@@ -1,0 +1,71 @@
+term xterm-256color
+# включаем utf8, ага
+defutf8 on
+# настройка режим управления потоком окна.
+defflow on
+# включает login-режим (для обновления /var/run/utmp)
+deflogin on
+termcapinfo xterm* ti@:te@
+
+# выключает использование или эмуляцию hardstatus-строки терминала
+# хотя можно использовать вместо caption
+hardstatus off
+# заголовок, о форматировании заголовка смотреть в мане
+caption always ' %{-b dd}%-w%{cd}%n* %t%{-}%+w %{cd}%-=(%l) %d/%m %c%{-} '
+
+# включаем визуальный звонок
+vbell on
+# сообщение для (visual bell)
+vbell_msg "vbell %n"
+# сообщение если в фоновом окне bell character, ^G
+bell_msg "Bell %n"
+# сообщение если есть активность в наблюдаемом окне
+activity "Activity on %n"
+# собственно включаем монитор активности, если off то включается командой ^a M
+defmonitor on
+# количество сохраненных строк
+defscrollback 10000
+# при копировании строки будут разделяться символами CR — LF
+
+crlf off
+# нахрен нам страница приветсвия
+startup_message off
+# цвет фона при очистке, кстати имя терминала тоже меняется
+# поэтому настройку клавиатуры zsh надо проводить отдельно
+defbce on
+# по умолчанию детатчится при разрыве связи с терминалом
+# для работы по ssh самое оно
+autodetach on
+# поддержка alternate screen, типо отчистка экрана при выходе из манов и пр.
+altscreen on
+# как же мы без скринсейвера
+idle 30 eval "screen cmatrix -f -o -u 10" "idle 0"
+# вешаем ^a + на увеличение окон на 3 и ^a - на уменьшение на 1
+bind + resize +3
+bind - resize -1
+# имя файла для чтения и записи буфера обмена, по дефолту пишет
+# в /tmp/screen-exchange
+bufferfile ~/.bak/screen-exchange
+# make some default windows
+screen -t gulp 0
+stuff "cddev^M^L"
+screen -t code 1
+stuff "cddev^M^L"
+screen -t code 2
+stuff "cddev^M^L"
+screen -t code 3
+stuff "cddev^M^L"
+screen -t code 4
+stuff "cddev^M^L"
+
+shell -$SHELL
+#chdir /www/srs/
+#screen -t SRS3  3
+#chdir /tests
+#screen -t BO 10
+#chdir /www/srs; ./script/backoffice_server.pl -p 3001 -dr
+#
+#screen -t FO 0
+#chdir /www/srs; ./script/frontoffice_server.pl -dr
+#termcapinfo xterm-256color|xterm-color|xterm|xterms|xs|rxvt ti@:te@
+#termcapinfo xterm 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007:ti@:te@'
