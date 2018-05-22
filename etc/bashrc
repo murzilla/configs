@@ -1,0 +1,322 @@
+# /etc/bashrc
+
+# System wide functions and aliases
+# Environment stuff goes in /etc/profile
+
+# It's NOT a good idea to change this file unless you know what you
+# are doing. It's much better to create a custom.sh shell script in
+# /etc/profile.d/ to make custom changes to your environment, as this
+# will prevent the need for merging in future updates.
+
+# are we an interactive shell?
+if [ "$PS1" ]; then
+  if [ -z "$PROMPT_COMMAND" ]; then
+    case $TERM in
+    xterm*|vte*)
+      if [ -e /etc/sysconfig/bash-prompt-xterm ]; then
+          PROMPT_COMMAND=/etc/sysconfig/bash-prompt-xterm
+      elif [ "${VTE_VERSION:-0}" -ge 3405 ]; then
+          PROMPT_COMMAND="__vte_prompt_command"
+      else
+          PROMPT_COMMAND='printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+      fi
+      ;;
+    screen*)
+      if [ -e /etc/sysconfig/bash-prompt-screen ]; then
+          PROMPT_COMMAND=/etc/sysconfig/bash-prompt-screen
+      else
+          PROMPT_COMMAND='printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+      fi
+      ;;
+    *)
+      [ -e /etc/sysconfig/bash-prompt-default ] && PROMPT_COMMAND=/etc/sysconfig/bash-prompt-default
+      ;;
+    esac
+  fi
+  # Turn on parallel history
+  shopt -s histappend
+  history -a
+  # Turn on checkwinsize
+  shopt -s checkwinsize
+  [ "$PS1" = "\\s-\\v\\\$ " ] && PS1="[\u@\h \W]\\$ "
+  # You might want to have e.g. tty in prompt (e.g. more virtual machines)
+  # and console windows
+  # If you want to do so, just add e.g.
+  # if [ "$PS1" ]; then
+  #   PS1="[\u@\h:\l \W]\\$ "
+  # fi
+  # to your custom modification shell script in /etc/profile.d/ directory
+fi
+
+if ! shopt -q login_shell ; then # We're not a login shell
+    # Need to redefine pathmunge, it get's undefined at the end of /etc/profile
+    pathmunge () {
+        case ":${PATH}:" in
+            *:"$1":*)
+                ;;
+            *)
+                if [ "$2" = "after" ] ; then
+                    PATH=$PATH:$1
+                else
+                    PATH=$1:$PATH
+                fi
+        esac
+    }
+
+    # By default, we want umask to get set. This sets it for non-login shell.
+    # Current threshold for system reserved uid/gids is 200
+    # You could check uidgid reservation validity in
+    # /usr/share/doc/setup-*/uidgid file
+    if [ $UID -gt 199 ] && [ "`id -gn`" = "`id -un`" ]; then
+       umask 002
+    else
+       umask 022
+    fi
+
+    SHELL=/bin/bash
+    # Only display echos from profile.d scripts if we are no login shell
+    # and interactive - otherwise just process them to set envvars
+    for i in /etc/profile.d/*.sh; do
+        if [ -r "$i" ]; then
+            if [ "$PS1" ]; then
+                . "$i"
+            else
+                . "$i" >/dev/null
+            fi
+        fi
+    done
+
+    unset i
+    unset -f pathmunge
+fi
+# vim:ts=4:sw=4
+# .bashrc
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
+    else
+        color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+#    PS1="\[\033[38;5;75m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\[$(tput sgr0)\]\[\033[38;5;196m\]\h\[$(tput sgr0)\]\[\033[38;5;15m\]:\[$(tput sgr0)\]\[\033[38;5;202m\]\w\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
+#    PS1="\[\033[38;5;75m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\] @ \[$(tput sgr0)\]"'\[`[ $? = 0 ] && X=2 || X=1; tput setaf $X`\]\h\[`tput sgr0`\]:\[\033[38;5;202m\]\w\[$(tput sgr0)\] $(pwd -P)\n \[\e[1;37m\]\$ '
+    PS1="\[\033[38;5;75m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\] @ \[$(tput sgr0)\]"'\[`[ $? = 0 ] && X=2 || X=1; tput setaf $X`\]\h\[`tput sgr0`\]:\[\033[38;5;202m\]\w\[$(tput sgr0)\] $(if [[ $PWD != $(pwd -P) ]]; then echo "("$(pwd -P)")"; else echo ""; fi) \n \[\e[1;37m\]\$ '
+
+#     PS1="\[\033[01;37m\]\$? \$(if [[ \$? == 0 ]]; then echo \"\[\033[01;32m\]\342\234\223\"; else echo \"\[\033[01;31m\]\342\234\227\"; fi) $(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h'; else echo '\[\033[01;32m\]\u@\h'; fi)\[\033[01;34m\] \w \$\[\033[00m\] "
+
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+#     PS1="\[\033[38;5;9m\]\u@\h\[$(tput sgr0)\]\[\033[38;5;15m\]:\w\\$\[$(tput sgr0)\]"
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    #alias grep='grep --color=auto'
+    #alias fgrep='fgrep --color=auto'
+    #alias egrep='egrep --color=auto'
+fi
+
+# some more ls aliases
+#alias ll='ls -l'
+#alias la='ls -A'
+#alias l='ls -CF'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+bind '"\e[A"':history-search-backward
+bind '"\e[B"':history-search-forward
+bind '"\t":menu-complete'
+
+alias ll="ls -al --group-directories-first"
+alias ls='ls -hF --color'  # add colors for filetype recognition
+alias la='ls -Al'          # show hidden files
+alias lx='ls -lXB'         # sort by extension
+alias lk='ls -lSr'         # sort by size, biggest last
+alias lj='ls -lS'         # sort by size, biggest last
+alias lc='ls -ltcr'        # sort by and show change time, most recent last
+alias lu='ls -ltur'        # sort by and show access time, most recent last
+alias lt='ls -ltr'         # sort by date, most recent last
+alias lm='ls -al |more'    # pipe through 'more'
+alias lr='ls -lR'          # recursive ls
+alias tree='tree -Csu'     # nice alternative to 'recursive ls'
+alias lld='ll -d */'          # recursive ls
+alias conv='find . -name "*.html" -exec iconv -f ISO-8859-1 -t UTF-8 {} -o ../docs_utf/{} \;'
+alias cddev='cd /opt/dev/current' # cd dev
+alias cdld='cd /opt/local_dev' # cd local_dev
+alias cdng='cd /usr/share/nginx' # cd nginx root
+alias gulpc='gulp --require coffee-script/register' # cd nginx root
+function cd {
+  builtin cd "$@" && ll
+}
+
+ackl(){
+    LC_CTYPE=ru_RU.CP1251 luit ack "$(iconv -t CP1251 <<< $1)" */*
+}
+
+# If your version of 'ls' doesn't support --group-directories-first try this:
+# function ll(){ ls -l "$@"| egrep "^d" ; ls -lXB "$@" 2>&-| \
+        #                egrep -v "^d|total "; }
+
+
+#-------------------------------------------------------------
+# tailoring 'less'
+#-------------------------------------------------------------
+
+alias more='less'
+export PAGER=less
+export LESSCHARSET='utf-8'
+export LESSOPEN='|/usr/bin/lesspipe.sh %s 2>&-'
+   # Use this if lesspipe.sh exists
+export LESS='-i -N -w  -z-4 -g -e -M -X -F -R -P%t?f%f \
+:stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
+
+export MC_SKIN=/home/murzilla/.mc/solarized.ini
+
+#export DBIC_TRACE=1
+#export PERL_LOCAL_LIB_ROOT="/home/murzilla/perl5:$PERL_LOCAL_LIB_ROOT";
+#export PERL_MB_OPT="--install_base "/home/murzilla/perl5"";
+#export PERL_MM_OPT="INSTALL_BASE=/home/murzilla/perl5";
+#export PERL5LIB="/home/murzilla/perl5/lib/perl5:$PERL5LIB";
+#export PATH="/home/murzilla/perl5/bin:$PATH";
+#
+#unset LC_ALL
+#export LANG=C
+#export LC_CTYPE="ru_RU.UTF-8"
+#export LC_NUMERIC="ru_RU.UTF-8"
+#export LC_TIME="ru_RU.UTF-8"
+#export LC_COLLATE="ru_RU.UTF-8"
+#export LC_MONETARY="ru_RU.UTF-8"
+#export LC_MESSAGES=C
+#export LC_PAPER="ru_RU.UTF-8"
+#export LC_NAME="ru_RU.UTF-8"
+#export LC_ADDRESS="ru_RU.UTF-8"
+#export LC_TELEPHONE="ru_RU.UTF-8"
+#export LC_MEASUREMENT="ru_RU.UTF-8"
+#export LC_IDENTIFICATION="ru_RU.UTF-8"
+#export LESSCHARSET="UTF-8"
+
+#unset LC_ALL
+#export LANG=C
+#export LC_CTYPE="ru_RU.CP1251"
+#export LC_NUMERIC="ru_RU.CP1251"
+#export LC_TIME="ru_RU.CP1251"
+#export LC_COLLATE="ru_RU.CP1251"
+#export LC_MONETARY="ru_RU.CP1251"
+#export LC_MESSAGES=C
+#export LC_PAPER="ru_RU.CP1251"
+#export LC_NAME="ru_RU.CP1251"
+#export LC_ADDRESS="ru_RU.CP1251"
+#export LC_TELEPHONE="ru_RU.CP1251"
+#export LC_MEASUREMENT="ru_RU.CP1251"
+#export LC_IDENTIFICATION="ru_RU.CP1251"
+#export LESSCHARSET="CP1251"
+
+#export PATH="$HOME/.rbenv/bin:$PATH"
+#eval "$(rbenv init -)"
+#
+#export NVM_DIR="/home/murzilla/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+## Set tab color to red
+#echo -e "\033]6;1;bg;red;brightness;255\a"
+#
+## Set window profile ( in my case, Prod profile will make the background red)
+#export PATH=/usr/local/bin:$PATH
+#export PROTOBUF_INCLUDE_DIR=/usr/local/include/google/protobuf
+#export LIBDIR=/usr/local/lib/:/usr/local/lib64/:$LIBDIR
+#export LD_LIBRARY_PATH=$LIBDIR:$LD_LIBRARY_PATH
+#export CC=/usr/local/bin/gcc
+#export CXX=/usr/local/bin/g++
+#export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
+
