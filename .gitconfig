@@ -1,6 +1,6 @@
 [user]
-  name = Foo
-  email = foo@bar.com
+  name = Murat Baktiev
+  email = murat.baktiev@transfer-to.com
 [http]
   postBuffer = 157286400
 [alias]
@@ -32,4 +32,5 @@
 [branch]  
   autosetuprebase = always
 [core]
-  excludesfile = ~/.gitignore
+  excludesfile = /home/murzilla/.gitignore
+	editor = vim
