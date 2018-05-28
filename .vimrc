@@ -11,6 +11,8 @@ set noerrorbells         " dont beep
 nnoremap ; :
 " search visual selection
 vnoremap // y/<C-R>"<CR>
+" replace visual selection
+vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 " long lines navigate better
 nnoremap j gj
 nnoremap k gk
@@ -32,6 +34,7 @@ set background=dark
 " GENERAL BEHAVIOR
 set backspace=indent,eol,start  " backspace delete over line breaks
 set pastetoggle=<F2>
+
 " splits 
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -69,6 +72,11 @@ let perl_sync_dist     = 250
 au BufNewFile,BufRead *.tt setf tt2
 au BufNewFile,BufRead *.tt2 setf tt2
 :let b:tt2_syn_tags = '\[% %] <!-- -->'
+set tags=./.tags,~/.git/.tags
+" F3 - Open Tagbar to view language objects for the open file
+noremap <F3> :TagbarToggle <CR>
+" C-\ - Open the definition in a new tab
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
 " INDENTATIONS
 filetype indent on      " activates indenting for files
@@ -106,6 +114,7 @@ Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlig
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'majutsushi/tagbar'
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -167,3 +176,22 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+" ctags and tagbar
+let g:tagbar_type_perl = {
+    \ 'ctagstype' : 'perl',
+    \ 'kinds'     : [
+        \ 'p:package:0:0',
+        \ 'w:roles:0:0',
+        \ 'e:extends:0:0',
+        \ 'u:uses:0:0',
+        \ 'r:requires:0:0',
+        \ 'o:ours:0:0',
+        \ 'a:properties:0:0',
+        \ 'b:aliases:0:0',
+        \ 'h:helpers:0:0',
+        \ 's:subroutines:0:0',
+        \ 'd:POD:1:0'
+    \ ]
+\ }
+
+map <leader>ff :Files<CR>

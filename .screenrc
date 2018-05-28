@@ -1,3 +1,4 @@
+escape ^Bb
 term xterm-256color
 # включаем utf8, ага
 defutf8 on

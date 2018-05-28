@@ -10,10 +10,9 @@ fi
 
 # User specific aliases and functions
 
-# move .nvm folder to other location to save inodes number
 export NVM_DIR="/opt/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-source ~/.rvm/scripts/rvm
+source /home/murzilla/.rvm/scripts/rvm
 export TERM=xterm-256color
 
 export PATH=$PATH:/usr/pgsql-9.6/bin
@@ -63,6 +62,9 @@ alias pgstart='docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=pgpw
 alias odoodb='docker run -p 5432:5432 -d -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo --name db postgres'
 alias odoostart='docker run -p 8069:8069 --name odoo --link db:db -t odoo'
 alias pgcli='docker run -it --rm --link db:postgres postgres psql -h postgres -U odoo'
+alias ctagit="ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extra=q --languages=Perl --langmap=Perl:+.t"
+alias mockserver='docker run --rm --name mockserver -p 1080:1080 -p 1090:1090 jamesdbloom/mockserver'
+
 function cd {
   builtin cd "$@" && ll
 }
