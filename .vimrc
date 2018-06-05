@@ -114,6 +114,8 @@ Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlig
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+" Autotag: automatically regenerate tags for a file when written.
+Plug 'craigemery/vim-autotag'
 Plug 'majutsushi/tagbar'
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -195,3 +197,34 @@ let g:tagbar_type_perl = {
 \ }
 
 map <leader>ff :Files<CR>
+map <C-p> :FZF<CR>
+
+
+" Configure FZF to find ctags
+" https://github.com/junegunn/fzf/wiki/Examples-(vim)#jump-to-tags
+function! s:tags_sink(line)
+  let parts = split(a:line, '\t\zs')
+  let excmd = matchstr(parts[2:], '^.*\ze;"\t')
+  execute 'silent e' parts[1][:-2]
+  let [magic, &magic] = [&magic, 0]
+  execute excmd
+  let &magic = magic
+endfunction
+function! s:tags()
+  if empty(tagfiles())
+    echohl WarningMsg
+    echom 'Preparing tags'
+    echohl None
+    call system('ctags -R --exclude=.git --exclude=node_modules --html-kinds=-ij')
+  endif
+
+  call fzf#run({
+  \ 'source':  'cat '.join(map(tagfiles(), 'fnamemodify(v:val, ":S")')).
+  \            '| grep -v -a ^!',
+  \ 'options': '+m -d "\t" --with-nth 1,4.. -n 1 --tiebreak=index',
+  \ 'down':    '40%',
+  \ 'sink':    function('s:tags_sink')})
+endfunction
+command! Tags call s:tags()
+"nnoremap <C-t> :Tags<CR>
+"nmap <C-t> :Tags<CR>

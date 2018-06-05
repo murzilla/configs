@@ -62,7 +62,7 @@ alias pgstart='docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=pgpw
 alias odoodb='docker run -p 5432:5432 -d -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo --name db postgres'
 alias odoostart='docker run -p 8069:8069 --name odoo --link db:db -t odoo'
 alias pgcli='docker run -it --rm --link db:postgres postgres psql -h postgres -U odoo'
-alias ctagit="ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extra=q --languages=Perl --langmap=Perl:+.t"
+alias ctagit="ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extra=q --languages=Perl,js --langmap=Perl:+.t,js:.js.es6.es.jsx"
 alias mockserver='docker run --rm --name mockserver -p 1080:1080 -p 1090:1090 jamesdbloom/mockserver'
 
 function cd {
