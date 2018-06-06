@@ -73,3 +73,5 @@ echo "~/bashrc loaded"
 source ~/perl5/perlbrew/etc/bashrc
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+export EDITOR=vim
