@@ -1,5 +1,4 @@
 --langmap=javascript:.js.es6.es.jsx
-
 --regex-javascript=/^[ \t]*var[ \t]\{1,\}\([A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*\[/\1/A,Array,Arrays/b
 --regex-javascript=/^[ \t]*let[ \t]\{1,\}\([A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*\[/\1/A,Array,Arrays/b
 --regex-javascript=/^[ \t]*const[ \t]\{1,\}\([A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*\[/\1/A,Array,Arrays/b
@@ -68,6 +67,7 @@
 --regex-javascript=/^[ \t]*let[ \t]\{1,\}\([A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*new/\1/V,Variable,Variables/b
 --regex-javascript=/^[ \t]*const[ \t]\{1,\}\([A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*new/\1/V,Variable,Variables/b
 
+--exclude=.git
 --exclude=min
 --exclude=vendor
 --exclude=\*.min.\*
@@ -79,7 +79,8 @@
 --exclude=bower_components
 --exclude=test
 --exclude=tests
-
+--recurse=yes
+--tag-relative=yes
 --langmap=perl:+.pod
 --regex-perl=/with[ \t]+([^;]+)[ \t]*?;/\1/w,role,roles/
 --regex-perl=/extends[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
@@ -98,4 +99,3 @@
 --regex-perl=/^\=head[3][ \t]+(.+)/--- \1/d,pod,POD/
 --regex-perl=/^\=head[4][ \t]+(.+)/---- \1/d,pod,POD/
 -R
-
