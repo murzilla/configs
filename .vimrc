@@ -72,6 +72,7 @@ let perl_sync_dist     = 250
 "syntax highlighting for TT
 au BufNewFile,BufRead *.tt setf tt2
 au BufNewFile,BufRead *.tt2 setf tt2
+au BufRead,BufNewFile *.tt set filetype=html
 :let b:tt2_syn_tags = '\[% %] <!-- -->'
 set tags=./.tags;/,.tags;/
 " F3 - Open Tagbar to view language objects for the open file
@@ -139,9 +140,12 @@ let g:user_emmet_settings = {
 \  'vue' : {
 \      'extends' : '',
 \  },
+\  'tt2' : {
+\      'extends' : 'html',
+\  },
 \}
 
-autocmd FileType pug,html,css,javascript.jsx,vue EmmetInstall
+autocmd FileType pug,html,css,javascript.jsx,vue,tt2 EmmetInstall
 " Makefile required hard tabs
 autocmd FileType make setlocal noexpandtab
 
@@ -182,22 +186,20 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " ctags and tagbar
 let g:tagbar_type_perl = {
-    \ 'ctagstype'   : 'Perl',
-    \ 'kinds' : [
-        \ 'p:packages:1:0',
-        \ 'u:uses:1:0',
-        \ 'r:requires:1:0',
-        \ 'e:extends',
-        \ 'w:roles',
-        \ 'o:ours:1:0',
-        \ 'c:constants:1:0',
-        \ 'f:formats:1:0',
-        \ 'a:attributes',
-        \ 's:subroutines',
-        \ 'x:around:1:0',
-        \ 'l:aliases',
-        \ 'd:pod:1:0',
-    \ ],
+    \ 'ctagstype' : 'perl',
+    \ 'kinds'     : [
+        \ 'p:package:0:0',
+        \ 'w:roles:0:0',
+        \ 'e:extends:0:0',
+        \ 'u:uses:0:0',
+        \ 'r:requires:0:0',
+        \ 'o:ours:0:0',
+        \ 'a:properties:0:0',
+        \ 'b:aliases:0:0',
+        \ 'h:helpers:0:0',
+        \ 's:subroutines:0:0',
+        \ 'd:POD:1:0'
+    \ ]
 \ }
 
 map <leader>ff :Files<CR>
