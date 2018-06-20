@@ -21,14 +21,14 @@
 --regex-javascript=/^[ \t]*export[ \t]\{1,\}let[ \t]\{1,\}\([A_Za-z0-9_$]\{1,\}\)[ \t]*[^,]\{1,\},[ \t]*\([A_Za-z0-9_$]\{1,\}\)[ \t]*,[ \t]*\([A_Za-z0-9_$]\{1,\}\)/\3/E,Export,Exports/b
 --regex-javascript=/^[ \t]*export[ \t]\{1,\}const[ \t]\{1,\}\([A_Za-z0-9_$]\{1,\}\)[ \t]*[^,]\{1,\},[ \t]*\([A_Za-z0-9_$]\{1,\}\)[ \t]*,[ \t]*\([A_Za-z0-9_$]\{1,\}\)/\3/E,Export,Exports/b
 
---regex-javascript=/^[ \t]*function[ \t]*\([A-Za-z0-9_$]\{1,\}\)[ \t(]/\1/F,Function,Functions/b
---regex-javascript=/^[ \t]*[(]function[ \t]*\([A-Za-z0-9_$]\{1,\}\)[ \t(]/\1/F,Function,Functions/b
---regex-javascript=/^[ \t]*var[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*function[^\*][^\*]/\1/F,Function,Functions/b
---regex-javascript=/^[ \t]*let[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*function[^\*][^\*]/\1/F,Function,Functions/b
---regex-javascript=/^[ \t]*const[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*function[^\*][^\*]/\1/F,Function,Functions/b
---regex-javascript=/^[ \t]*var[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*([^\*]/\1/F,Function,Functions/b
---regex-javascript=/^[ \t]*let[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*([^\*]/\1/F,Function,Functions/b
---regex-javascript=/^[ \t]*const[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*([^\*]/\1/F,Function,Functions/b
+--regex-javascript=/^[ \t]*function[ \t]*\([A-Za-z0-9_$]\{1,\}\)[ \t(]/\1/f,Function,Functions/b
+--regex-javascript=/^[ \t]*[(]function[ \t]*\([A-Za-z0-9_$]\{1,\}\)[ \t(]/\1/f,Function,Functions/b
+--regex-javascript=/^[ \t]*var[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*function[^\*][^\*]/\1/f,Function,Functions/b
+--regex-javascript=/^[ \t]*let[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*function[^\*][^\*]/\1/f,Function,Functions/b
+--regex-javascript=/^[ \t]*const[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*function[^\*][^\*]/\1/f,Function,Functions/b
+--regex-javascript=/^[ \t]*var[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*([^\*]/\1/f,Function,Functions/b
+--regex-javascript=/^[ \t]*let[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*([^\*]/\1/f,Function,Functions/b
+--regex-javascript=/^[ \t]*const[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*([^\*]/\1/f,Function,Functions/b
 
 --regex-javascript=/^[ \t]*function[ \t]*\*[ \t]*\([A-Za-z0-9_$]\{1,\}\)/\1/G,Generator,Generators/b
 --regex-javascript=/^[ \t]*var[ \t]\{1,\}\([a-z][A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*function\([ \t]*\*\)/\1/G,Generator,Generators/b
@@ -67,20 +67,6 @@
 --regex-javascript=/^[ \t]*let[ \t]\{1,\}\([A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*new/\1/V,Variable,Variables/b
 --regex-javascript=/^[ \t]*const[ \t]\{1,\}\([A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*new/\1/V,Variable,Variables/b
 
---exclude=.git
---exclude=min
---exclude=vendor
---exclude=\*.min.\*
---exclude=\*.map
---exclude=\*.swp
---exclude=\*.bak
---exclude=tags
---exclude=node_modules
---exclude=bower_components
---exclude=test
---exclude=tests
---recurse=yes
---tag-relative=yes
 --langmap=perl:+.pod
 --regex-perl=/with[ \t]+([^;]+)[ \t]*?;/\1/w,role,roles/
 --regex-perl=/extends[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
@@ -89,13 +75,29 @@
 --regex-perl=/^[ \t]*?use[ \t]+Mojo::Base[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
 --regex-perl=/^[ \t]*?use[ \t]+([^;]+)[ \t]*?;/\1/u,use,uses/
 --regex-perl=/^[ \t]*?require[ \t]+((\w|\:)+)/\1/r,require,requires/
---regex-perl=/^[ \t]*?has[ \t]+['"]?(\w+)['"]?/\1/a,property,properties/
+--regex-perl=/^[ \t]*?has[ \t]+['"]?(\w+)['"]?/\1/t,property,properties/
 --regex-perl=/^[ \t]*?\*(\w+)[ \t]*?=/\1/b,alias,aliases/
 --regex-perl=/->helper\([ \t]?['"]?(\w+)['"]?/\1/h,helper,helpers/
 --regex-perl=/^[ \t]*?our[ \t]*?[\$@%](\w+)/\1/o,our,ours/
---regex-perl=/^[ \t]*?my[ \t]*?(\$\w+)[ \t]*?=[ \t]*?sub/\1/s,private subroutine,private subroutines/
+--regex-perl=/^[ \t]*?my[ \t]*?(\$\w+)[ \t]*?=[ \t]*?sub/\1/x,private subroutine,private subroutines/
 --regex-perl=/^\=head1[ \t]+(.+)/\1/d,pod,POD/
 --regex-perl=/^\=head2[ \t]+(.+)/-- \1/d,pod,POD/
 --regex-perl=/^\=head[3][ \t]+(.+)/--- \1/d,pod,POD/
 --regex-perl=/^\=head[4][ \t]+(.+)/---- \1/d,pod,POD/
+--exclude=.git
+--exclude=min
+--exclude=vendor
+--exclude=\*.min.\*
+--exclude=\*.map
+--exclude=\*.swp
+--exclude=\*.bak
+--exclude=tags
+--exclude=.tags
+--exclude=node_modules
+--exclude=bower_components
+--exclude=test
+--exclude=tests
+--exclude=local
+--recurse=yes
+--tag-relative=yes
 -R

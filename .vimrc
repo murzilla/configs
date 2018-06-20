@@ -36,7 +36,7 @@ set background=dark
 set backspace=indent,eol,start  " backspace delete over line breaks
 set pastetoggle=<F2>
 
-" splits 
+" splits
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -65,9 +65,19 @@ augroup resCur
   autocmd!
   autocmd BufWinEnter * call ResCur()
 augroup END
+" Whitespace
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+" autocmd BufWinLeave * call clearmatches()
+" function! TrimWhiteSpace()
+"     %s/\s\+$//e
+" endfunction
+" autocmd BufWritePre * :call TrimWhiteSpace()
 
-
-" PERL OPTIONS 
+" PERL OPTIONS
 let perl_include_pod   = 1
 let perl_extended_vars = 1
 let perl_sync_dist     = 250
@@ -76,7 +86,6 @@ au BufNewFile,BufRead *.tt setf tt2
 au BufNewFile,BufRead *.tt2 setf tt2
 au BufRead,BufNewFile *.tt set filetype=html
 :let b:tt2_syn_tags = '\[% %] <!-- -->'
-set tags=./.tags;/,.tags;/
 " F3 - Open Tagbar to view language objects for the open file
 noremap <F3> :TagbarToggle <CR>
 " C-\ - Open the definition in a new tab
@@ -134,7 +143,7 @@ call plug#end()
 
 let g:javascript_enable_domhtmlcss = 1 " JS Syntax
 " EMMET settingts
-let g:user_emmet_install_global = 0    " Emmet 
+let g:user_emmet_install_global = 0    " Emmet
 let g:user_emmet_settings = {
 \  'javascript.jsx' : {
 \      'extends' : 'jsx',
@@ -187,24 +196,46 @@ map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " ctags and tagbar
+let g:tagbar_autoclose = 1
+" Tagbar settings to recognise Perl Moo..Moose
 let g:tagbar_type_perl = {
-    \ 'ctagstype'   : 'Perl',
-    \ 'kinds' : [
-        \ 'p:packages:1:0',
-        \ 'u:uses:1:0',
-        \ 'r:requires:1:0',
-        \ 'e:extends',
-        \ 'w:roles',
-        \ 'o:ours:1:0',
-        \ 'c:constants:1:0',
-        \ 'f:formats:1:0',
-        \ 'a:attributes',
-        \ 's:subroutines',
-        \ 'x:around:1:0',
-        \ 'l:aliases',
-        \ 'd:pod:1:0',
-    \ ]
+    \ 'ctagstype' : 'perl',
+    \ 'kinds'     : [
+        \ 'p:package:0:0',
+        \ 'w:roles:0:0',
+        \ 'e:extends:0:0',
+        \ 'u:uses:0:0',
+        \ 'r:requires:0:0',
+        \ 'o:ours:0:0',
+        \ 'a:properties:0:0',
+        \ 't:attributes:0:0',
+        \ 'b:aliases:0:0',
+        \ 'h:helpers:0:0',
+        \ 's:subroutines:0:0',
+        \ 'd:POD:1:0'
+    \ ],
+    \ 'ctagsbin'  : 'ctags',
+    \ 'ctagsargs'  : '--options=/home/murzilla/.ctags --append=no -f tags2 --languages=Perl --langmap=Perl:+.t -o -',
 \ }
 
 map <leader>ff :Files<CR>
 map <C-p> :FZF<CR>
+
+let NERDTreeHijackNetrw=1
+set tags=./.tags;/,.tags;/
+let g:Tlist_Ctags_Cmd='/usr/local/bin/ctags'
+" To move/swap windows see :help window-moving
+" CTRL-W r	Rotate windows downwards/rightwards.
+" CTRL-W x	Exchange current window with next one.
+" The following commands can be used to change the window layout.
+" CTRL-W K	Move the current window to be at the very top, using the full
+"		width of the screen.
+" CTRL-W J	Move the current window to be at the very bottom, using the
+"		full width of the screen.
+" CTRL-W H	Move the current window to be at the far left, using the
+"		full height of the screen.
+" CTRL-W L	Move the current window to be at the far right, using the full
+"		height of the screen.
+" CTRL-W T	Move the current window to a new tab page.  This fails if
+"		there is only one window in the current tab page.
+" See also :help CTRL-W for a full list of window commands.
