@@ -65,16 +65,19 @@ augroup resCur
   autocmd!
   autocmd BufWinEnter * call ResCur()
 augroup END
+
 " Whitespace
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+
 " autocmd BufWinLeave * call clearmatches()
-" function! TrimWhiteSpace()
-"     %s/\s\+$//e
-" endfunction
+function! NoTrSp()
+    %s/\s\+$//e
+endfunction
 " autocmd BufWritePre * :call TrimWhiteSpace()
 
 " PERL OPTIONS
@@ -86,8 +89,8 @@ au BufNewFile,BufRead *.tt setf tt2
 au BufNewFile,BufRead *.tt2 setf tt2
 au BufRead,BufNewFile *.tt set filetype=html
 :let b:tt2_syn_tags = '\[% %] <!-- -->'
-" F3 - Open Tagbar to view language objects for the open file
-noremap <F3> :TagbarToggle <CR>
+" ctrl z to tagbar
+map <C-z> :TagbarToggle <CR>
 " C-\ - Open the definition in a new tab
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
@@ -209,6 +212,7 @@ let g:tagbar_type_perl = {
         \ 'o:ours:0:0',
         \ 'a:properties:0:0',
         \ 't:attributes:0:0',
+        \ 'x:private:0:0',
         \ 'b:aliases:0:0',
         \ 'h:helpers:0:0',
         \ 's:subroutines:0:0',
@@ -220,6 +224,7 @@ let g:tagbar_type_perl = {
 
 map <leader>ff :Files<CR>
 map <C-p> :FZF<CR>
+map <leader>h :History:<CR>
 
 let NERDTreeHijackNetrw=1
 set tags=./.tags;/,.tags;/
