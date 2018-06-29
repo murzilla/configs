@@ -68,7 +68,7 @@
 --regex-javascript=/^[ \t]*const[ \t]\{1,\}\([A-Za-z0-9_$]\{1,\}\)[ \t]*=[ \t]*new/\1/V,Variable,Variables/b
 
 --langmap=perl:+.pod
---regex-perl=/with[ \t]+([^;]+)[ \t]*?;/\1/w,role,roles/
+--regex-perl=/^[ \t]*?with[ \t]+([^;]+)[ \t]*?;/\1/w,role,roles/
 --regex-perl=/extends[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
 --regex-perl=/^[ \t]*?use[ \t]+base[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/
 --regex-perl=/^[ \t]*?use[ \t]+parent[ \t]+['"]([^'"]+)['"][ \t]*?;/\1/e,extends/

@@ -8,6 +8,8 @@ set wildignore=*.swp,*.bak,*.pyc,*.class
 set title                " change the terminals title
 set visualbell           " dont beep
 set noerrorbells         " dont beep
+set clipboard=unnamed
+
 " faster than Shift+:
 nnoremap ; :
 " search visual selection
@@ -35,6 +37,7 @@ set background=dark
 " GENERAL BEHAVIOR
 set backspace=indent,eol,start  " backspace delete over line breaks
 set pastetoggle=<F2>
+set shellcmdflag=-c " bash in vim
 
 " splits
 nnoremap <C-J> <C-W><C-J>
@@ -116,6 +119,7 @@ endif
 " install plugins
 call plug#begin('~/.vim/plugged')
 
+Plug 'mhinz/vim-startify'
 Plug 'altercation/vim-colors-solarized'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
@@ -130,6 +134,7 @@ Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlig
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-easy-align'
 Plug 'majutsushi/tagbar'
 Plug 'craigemery/vim-autotag'
 Plug 'tpope/vim-fugitive'
@@ -195,7 +200,9 @@ let g:deoplete#omni#input_patterns.javascript = '[^. *\t]\.\w*'
 " NERDTree confs
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-map <C-n> :NERDTreeToggle<CR>
+map <C-n> :NERDTreeToggle %<CR>
+map <leader>r :NERDTreeFind<cr>
+
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " ctags and tagbar
@@ -219,7 +226,7 @@ let g:tagbar_type_perl = {
         \ 'd:POD:1:0'
     \ ],
     \ 'ctagsbin'  : 'ctags',
-    \ 'ctagsargs'  : '--options=/home/murzilla/.ctags --append=no -f tags2 --languages=Perl --langmap=Perl:+.t -o -',
+    \ 'ctagsargs'  : '--options=/home/murzilla/.ctags --append=no -f tags2 --languages=Perl --langmap=Perl:+.t. -o -',
 \ }
 
 map <leader>ff :Files<CR>

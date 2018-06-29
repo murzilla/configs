@@ -75,7 +75,7 @@ alias cperl='carton exec perl'
 function cd {
   builtin cd "$@" && ll
 }
-echo "~/bashrc loaded"
+#echo "~/bashrc loaded"
 
 source ~/perl5/perlbrew/etc/bashrc
 
