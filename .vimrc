@@ -196,6 +196,8 @@ let g:deoplete#enable_at_startup = 1
 let g:jsx_ext_required = 0
 let g:deoplete#omni#input_patterns = {}
 let g:deoplete#omni#input_patterns.javascript = '[^. *\t]\.\w*'
+let g:deoplete#num_processes = 1
+
 
 " NERDTree confs
 autocmd StdinReadPre * let s:std_in=1
@@ -229,6 +231,25 @@ let g:tagbar_type_perl = {
     \ 'ctagsargs'  : '--options=/home/murzilla/.ctags --append=no -f tags2 --languages=Perl --langmap=Perl:+.t. -o -',
 \ }
 
+let g:tagbar_type_vue = {
+    \ 'ctagstype' : 'javascript',
+    \ 'ctagsbin'  : 'ctags',
+    \ 'kinds'     : [
+        \ 'A:arrays:0:0',
+        \ 'C:classes:0:0',
+        \ 'E:exports:0:0',
+        \ 'f:functions:0:0',
+        \ 'G:generators:0:0',
+        \ 'I:imports:0:0',
+        \ 'M:methods:0:0',
+        \ 'P:properties:0:0',
+        \ 'O:objects:0:0',
+        \ 'T:tags:0:0',
+        \ 'V:variables:0:0',
+        \ 'v:variables:0:0'
+    \ ],
+    \ 'ctagsargs'  : '--options=/home/murzilla/.ctags --append=no -f tags2 --languages=javascript --langmap=javascript:+.vue. -o -',
+\ }
 map <leader>ff :Files<CR>
 map <C-p> :FZF<CR>
 map <leader>h :History:<CR>
