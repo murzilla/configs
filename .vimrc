@@ -198,7 +198,6 @@ let g:deoplete#omni#input_patterns = {}
 let g:deoplete#omni#input_patterns.javascript = '[^. *\t]\.\w*'
 let g:deoplete#num_processes = 1
 
-
 " NERDTree confs
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
@@ -257,6 +256,12 @@ map <leader>h :History:<CR>
 let NERDTreeHijackNetrw=1
 set tags=./.tags;/,.tags;/
 let g:Tlist_Ctags_Cmd='/usr/local/bin/ctags'
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 " To move/swap windows see :help window-moving
 " CTRL-W r	Rotate windows downwards/rightwards.
 " CTRL-W x	Exchange current window with next one.
@@ -272,3 +277,9 @@ let g:Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 " CTRL-W T	Move the current window to a new tab page.  This fails if
 "		there is only one window in the current tab page.
 " See also :help CTRL-W for a full list of window commands.
+
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \                 <bang>0)
