@@ -33,6 +33,9 @@ syn on                  " syntax highlighting
 set nu                  " line numbers
 "colorscheme desert      " colorscheme desert
 set background=dark
+set cursorcolumn
+set cursorline
+
 
 " GENERAL BEHAVIOR
 set backspace=indent,eol,start  " backspace delete over line breaks
@@ -54,7 +57,7 @@ set hlsearch            " highlight what you search for
 set incsearch           " type-ahead-find
 set showmatch           " cursor will briefly jump to the matching brace
 set matchpairs+=<:>     " add angle braces to matching
-set viminfo='10,\"100,:20,%,n~/.viminfo  " save info between sessions
+set viminfo='500,<100,:2000,%,n~/.viminfo  " save info between sessions
 set foldmethod=syntax
 set foldmethod=indent
 " Restore cursor position
@@ -203,6 +206,10 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 map <C-n> :NERDTreeToggle %<CR>
 map <leader>r :NERDTreeFind<cr>
+let NERDTreeMinimalUI=1
+let g:NERDTreeShowHidden=1
+
+
 
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
@@ -283,3 +290,5 @@ command! -bang -nargs=* Ag
   \                 <bang>0 ? fzf#vim#with_preview('up:60%')
   \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
   \                 <bang>0)
+
+let $BASH_ENV = "~/.bash_aliases"

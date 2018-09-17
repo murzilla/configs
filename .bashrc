@@ -41,10 +41,10 @@ alias ll="ls -la --group-directories-first"
 alias ls='ls -hF --color'  # add colors for filetype recognition
 alias la='ls -Al'          # show hidden files
 alias lx='ls -lXB'         # sort by extension
-alias lk='ls -laSr'         # sort by size, biggest last
+alias lk='ls -laSr'        # sort by size, biggest last
 alias lj='ls -laS'         # sort by size, biggest last
-alias lc='ls -latcr'        # sort by and show change time, most recent last
-alias lu='ls -latur'        # sort by and show access time, most recent last
+alias lc='ls -latcr'       # sort by and show change time, most recent last
+alias lu='ls -latur'       # sort by and show access time, most recent last
 alias lt='ls -ltr'         # sort by date, most recent last
 alias lm='ls -al |more'    # pipe through 'more'
 alias lr='ls -lR'          # recursive ls
@@ -52,7 +52,8 @@ alias tree='tree -Csu'     # nice alternative to 'recursive ls'
 alias lld='ll -d */'          # recursive ls
 #alias conv='find . -name "*.html" -exec iconv -f ISO-8859-1 -t UTF-8 {} -o ../docs_utf/{} \;'
 alias cddev='cd /opt/current' # cd dev
-alias vimdev='vim /opt/current.task' # cd dev
+alias vimdev='vim /opt/current.task' # current task
+alias vimrecon='vim /opt/current.recon' # current recon
 #alias cdld='cd /opt/local_dev' # cd local_dev
 alias cdhost='cd /opt/host' # cd local_dev
 alias cdng='cd /usr/share/nginx' # cd nginx root
@@ -67,10 +68,34 @@ alias pgcli='docker run -it --rm --link db:postgres postgres psql -h postgres -U
 alias ptagit="ctags --options=/home/murzilla/.ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=local --exclude=.git --exclude='*~' --extras=q --languages=Perl --langmap=Perl:+.t"
 alias jtagit="ctags --options=/home/murzilla/.ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extras=q --languages=Javascript --langmap=Javascript:.js.es6.es.jsx.vue"
 #alias ctagit="ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extra=q --languages=Perl --langmap=Perl:+.t"
-alias mockserver='docker run --rm --name mockserver -p 1080:1080 -p 1090:1090 jamesdbloom/mockserver'
+alias mockserver='docker run -it --init --rm --name mockserver -p 1080:1080 -p 1090:1090 jamesdbloom/mockserver'
 alias ag='ag --color-path=36'
-alias plack='carton exec plackup --no-default-middleware -R ./lib'
+alias cplack='carton exec plackup --no-default-middleware -R ./lib'
 alias cperl='carton exec perl'
+alias nonet='unshare -rn'
+alias pllast='perlbrew use perl-5.26.1'
+alias pl10='perlbrew use perl-5.10.1'
+
+function txlog {
+    TRX_ID=$1; mongo --quiet mongodb1.fixedandmobile.com/logs --eval "['3bill','topup'].forEach(function(coll){db[coll].find({trx_id:'$TRX_ID'}).limit(1).forEach(function(a){print(a.content)})})" | less
+}
+
+# operations on blocks of code between matching patterns
+function printblocks {
+    git grep -El "$1" | while read file; do echo "$file:"; sed -n -e "/$1/,/$2/{ p }" $file | cat -; done
+}
+
+function blocksmd5 {
+    git grep -El "$1" | while read file; do echo "$file:"; sed -n -e "/$1/,/$2/{ p }" $file | awk '$1=$1'| md5sum -; done 
+}
+
+function countblocks {
+    git grep -El "$1" | while read file; do echo -n "$file: "; sed -n -e "/$1/,/$2/{ p }" $file | awk '$1=$1'| md5sum -; done | awk '{print $2}' | sort | uniq -c | sort -nr | head
+}
+
+function deleteblock {
+    git grep -El "$1" | while read file; do echo "$file:"; perl -pi -e "BEGIN{undef $/;} s!$1.*?$2!!gsm" $file | cat -; done
+}
 
 function cd {
   builtin cd "$@" && ll
