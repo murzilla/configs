@@ -191,6 +191,7 @@ let g:ale_fixers = {
   \ 'javascript': ['eslint'],
   \ 'perl' : ['perl','perlcritic']
   \ }
+au FileType perl set iskeyword-=:
 let g:ale_type_map = { 'perlcritic': {'ES': 'WS', 'E': 'W'} }
 let g:ale_warn_about_trailing_whitespace = 1
 

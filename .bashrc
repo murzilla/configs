@@ -39,7 +39,7 @@ bind '"\t":menu-complete'
 
 alias ll="ls -la --group-directories-first"
 alias ls='ls -hF --color'  # add colors for filetype recognition
-alias la='ls -Al'          # show hidden files
+alias la='ls -Al | tail -n+2'          # show hidden files
 alias lx='ls -lXB'         # sort by extension
 alias lk='ls -laSr'        # sort by size, biggest last
 alias lj='ls -laS'         # sort by size, biggest last
@@ -52,6 +52,7 @@ alias tree='tree -Csu'     # nice alternative to 'recursive ls'
 alias lld='ll -d */'          # recursive ls
 #alias conv='find . -name "*.html" -exec iconv -f ISO-8859-1 -t UTF-8 {} -o ../docs_utf/{} \;'
 alias cddev='cd /opt/current' # cd dev
+alias cdc='cd /opt/current' # cd dev
 alias vimdev='vim /opt/current.task' # current task
 alias vimrecon='vim /opt/current.recon' # current recon
 #alias cdld='cd /opt/local_dev' # cd local_dev
@@ -68,7 +69,7 @@ alias pgcli='docker run -it --rm --link db:postgres postgres psql -h postgres -U
 alias ptagit="ctags --options=/home/murzilla/.ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=local --exclude=.git --exclude='*~' --extras=q --languages=Perl --langmap=Perl:+.t"
 alias jtagit="ctags --options=/home/murzilla/.ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extras=q --languages=Javascript --langmap=Javascript:.js.es6.es.jsx.vue"
 #alias ctagit="ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extra=q --languages=Perl --langmap=Perl:+.t"
-alias mockserver='docker run -it --init --rm --name mockserver -p 1080:1080 -p 1090:1090 jamesdbloom/mockserver'
+alias mockserver='docker run -it --init --rm --name mockserver -p 1080:1080 -p 1090:1090 jamesdbloom/mockserver /opt/mockserver/run_mockserver.sh -serverPort 1080 -genericJVMOptions "-Dmockserver.enableCORSForAllResponses=false"'
 alias ag='ag --color-path=36'
 alias cplack='carton exec plackup --no-default-middleware -R ./lib'
 alias cperl='carton exec perl'
@@ -82,28 +83,61 @@ function txlog {
 
 # operations on blocks of code between matching patterns
 function printblocks {
-    git grep -El "$1" | while read file; do echo "$file:"; sed -n -e "/$1/,/$2/{ p }" $file | cat -; done
+    echo "git grep -rl \"$1\" ${3:-.} | while read file; do echo \"$file:\"; sed -n -e \"/$1/,/$2/p;/^$2/q\" $file | cat -; done"
+    grep -rl "$1" ${3:-.} | while read file; do echo "$file:"; sed -n -e "/$1/,/$2/p;/^$2/q" $file | cat -; done
 }
 
-function blocksmd5 {
-    git grep -El "$1" | while read file; do echo "$file:"; sed -n -e "/$1/,/$2/{ p }" $file | awk '$1=$1'| md5sum -; done 
+function groupblocks {
+    grep -rl "$1" ${3:-.} | while read file; do echo "$file"; sed -n -e "/$1/,/$2/p;/^$2/q" $file | awk '$1=$1'| md5sum -; done | paste -d " "  - - | awk '{col[$2]=col[$2]"\n"$1} END {for (i in col) print i, col[i], "\n"}'
+    echo "Not found in:"
+    grep -rL "$1" .
+    #git grep -El "$1" | while read file; do echo -n "$file: "; sed -n -e "/$1/,/$2/{ p }" $file | awk '$1=$1'| md5sum -; done | paste -d " "  - - | awk '{col[$2]=col[$2]"\n"$1} END {for (i in col) print i, col[i]}'
 }
-
-function countblocks {
-    git grep -El "$1" | while read file; do echo -n "$file: "; sed -n -e "/$1/,/$2/{ p }" $file | awk '$1=$1'| md5sum -; done | awk '{print $2}' | sort | uniq -c | sort -nr | head
-}
-
 function deleteblock {
-    git grep -El "$1" | while read file; do echo "$file:"; perl -pi -e "BEGIN{undef $/;} s!$1.*?$2!!gsm" $file | cat -; done
+    grep -rl "$1" ${3:-.} | while read file; do echo "$file"; perl -pi -e "BEGIN{undef $/;} s!$1.*?$2!!gsm" $file | cat -; done
 }
+
+# operations on subs in modules
+function printsub {
+    grep -rl "sub $1" ${2:-.} | while read file; do echo "$file:"; sed -n -e "/\<sub $1\>/,/^\}/{ p }" $file | cat -; done
+}
+
+function groupsub {
+    grep -rl "sub $1" ${2:-.} | while read file; do echo "$file"; sed -n -e "/\<sub $1\>/,/^\}/{ p }" $file | awk '$1=$1'| md5sum -; done | paste -d " "  - - | awk '{col[$2]=col[$2]"\n"$1} END {for (i in col) print i, col[i], "\n"}'
+    echo "Not found in:"
+    grep -rL "sub $1"
+}
+
+function deletesub {
+    grep -rl "sub $1" ${2:-.} | while read file; do echo "$file"; perl -pi -e "BEGIN{undef $/;} s!\bsub $1\b.*?^\}!!gsm" $file | cat -; done
+}
+
+# cat /tmp/functions2.txt | while read -r line; do echo "========$line====="; groupsubs "$line"; printf "=======/$line======\n\n"; done
+#function blocksmd5 {
+#    git grep -El "$1" | while read file; do echo "$file:"; sed -n -e "/$1/,/$2/{ p }" $file | awk '$1=$1'| md5sum -; done
+#}
+
+#function countblocks {
+#    git grep -El "$1" | while read file; do echo -n "$file: "; sed -n -e "/$1/,/$2/{ p }" $file | awk '$1=$1'| md5sum -; done | awk '{print $2}' | sort | uniq -c | sort -nr | head
+#}
 
 function cd {
-  builtin cd "$@" && ll
+  builtin cd "$@" && la
 }
 #echo "~/bashrc loaded"
 
 source ~/perl5/perlbrew/etc/bashrc
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+#Less options
+export LESS='--quit-if-one-screen --ignore-case --status-column --LONG-PROMPT --RAW-CONTROL-CHARS --HILITE-UNREAD --tabs=4 --no-init --window=-4 -n'
+export LESS_TERMCAP_mb=$'\E[01;31m' # begin blinking
+export LESS_TERMCAP_md=$'\E[01;38;5;74m' # begin bold
+export LESS_TERMCAP_me=$'\E[0m' # end mode
+export LESS_TERMCAP_se=$'\E[0m' # end standout-mode
+export LESS_TERMCAP_so=$'\E[38;5;246m' # begin standout-mode - info box
+export LESS_TERMCAP_ue=$'\E[0m' # end underline
+export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
 export EDITOR=vim
