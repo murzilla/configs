@@ -24,6 +24,7 @@ nmap <silent> ,/ :nohlsearch<CR>
 " forgot sudo when opening file?
 cmap w!! w !sudo tee % >/dev/null
 imap jj <ESC>
+let mapleader = "\<Space>"
 
 "filetype off            " required
 " GENERAL LAYOUT
@@ -123,6 +124,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'mhinz/vim-startify'
+Plug 'tpope/vim-obsession'
 Plug 'altercation/vim-colors-solarized'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
@@ -142,6 +144,8 @@ Plug 'majutsushi/tagbar'
 Plug 'craigemery/vim-autotag'
 Plug 'tpope/vim-fugitive'
 Plug 'chrisbra/csv.vim'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -182,6 +186,9 @@ filetype plugin on
 set omnifunc=syntaxcomplete#Complete
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
+filetype plugin indent on
+autocmd FileType perl setlocal equalprg=perltidy\ -st
+
 " ALE settings
 let g:ale_perl_perl_options = '-c -Mwarnings -Ilib -It/lib'
 let g:ale_perl_perlcritic_showrules = 1
@@ -220,21 +227,23 @@ let g:tagbar_autoclose = 1
 let g:tagbar_type_perl = {
     \ 'ctagstype' : 'perl',
     \ 'kinds'     : [
-        \ 'p:package:0:0',
+        \ 'p:package:1:0',
         \ 'w:roles:0:0',
         \ 'e:extends:0:0',
         \ 'u:uses:0:0',
+        \ 'z:routes:0:0',
         \ 'r:requires:0:0',
         \ 'o:ours:0:0',
         \ 'a:properties:0:0',
         \ 't:attributes:0:0',
-        \ 'x:private:0:0',
+        \ 'x:private:1:0',
+        \ 'y:fields:1:0',
         \ 'b:aliases:0:0',
         \ 'h:helpers:0:0',
         \ 's:subroutines:0:0',
         \ 'd:POD:1:0'
     \ ],
-    \ 'ctagsbin'  : 'ctags',
+    \ 'ctagsbin'  : '/usr/local/bin/ctags',
     \ 'ctagsargs'  : '--options=/home/murzilla/.ctags --append=no -f tags2 --languages=Perl --langmap=Perl:+.t. -o -',
 \ }
 
