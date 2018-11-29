@@ -1,5 +1,5 @@
 -- Print date on startup
-\echo `date  +"%Y-%m-%d %H:%M:%S"`
+-- \echo `date  +"%Y-%m-%d %H:%M:%S"`
 -- Do NOT automatically commit after every statement!
 -- \set AUTOCOMMIT off
 
@@ -45,7 +45,7 @@
 -- \pset format wrapped
 
 -- Show how long it takes to run each query.
-\timing
+-- \timing
 
 -- Let Postgres format everything for you
 \x auto
@@ -58,3 +58,18 @@
 -- -- Set bytea output to show as many ASCII letters as possible.
 -- -- (Handy if you are storing text whose encoding you do not know in bytea columns.)
 -- set bytea_output to escape; commit;
+\set get_billing_rules 'select billing_rule from billing_customers where billing_rule is not null group by billing_rule order by billing_rule;'
+\set get_billing_rules2 'select billing_rule, id from billing_customers where billing_rule is not null group by billing_rule, id order by billing_rule;'
+\set s 'select * from '
+\set bc 'billing_customers'
+\set bi 'billing_invoices'
+\set bti 'billing_tshop_invoices'
+\set btii 'billing_tshop_invoice_items'
+\set id ' where id = '
+\set w ' where '
+\set o ' order by '
+\set oid ' order by id desc '
+\set oia ' order by id asc '
+\set l1 ' limit 1'
+\set l3 ' limit 3'
+

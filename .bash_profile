@@ -11,4 +11,6 @@ fi
 PATH=$PATH:$HOME/.local/bin:$HOME/bin
 
 export PATH
+CDPATH=$CDPATH:/opt/current/
 echo "~/.bash_profile loaded"
+

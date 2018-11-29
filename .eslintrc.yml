@@ -4,7 +4,8 @@ env:
   node: true
   es6: true
   mocha: true
-extends: 
+  jquery: true
+extends:
   - 'eslint:recommended'
   - 'plugin:react/recommended'
   - 'plugin:vue/essential'
@@ -17,7 +18,7 @@ parserOptions:
 plugins:
   - react
   - jasmine
-  - mocha 
+  - mocha
   - vue
 rules:
   indent:
@@ -28,7 +29,7 @@ rules:
     - unix
   quotes:
     - warn
-    - single 
+    - single
     - allowTemplateLiterals: true
   semi: 1
   no-console: 1

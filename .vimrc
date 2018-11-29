@@ -96,10 +96,6 @@ au BufNewFile,BufRead *.tt setf tt2
 au BufNewFile,BufRead *.tt2 setf tt2
 au BufRead,BufNewFile *.tt set filetype=html
 :let b:tt2_syn_tags = '\[% %] <!-- -->'
-" ctrl z to tagbar
-map <C-z> :TagbarToggle <CR>
-" C-\ - Open the definition in a new tab
-map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
 " INDENTATIONS
 filetype indent on      " activates indenting for files
@@ -187,7 +183,7 @@ set omnifunc=syntaxcomplete#Complete
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 
 filetype plugin indent on
-autocmd FileType perl setlocal equalprg=perltidy\ -st
+autocmd FileType perl setlocal equalprg=perltidy\ -l=500\ -st
 
 " ALE settings
 let g:ale_perl_perl_options = '-c -Mwarnings -Ilib -It/lib'
@@ -195,8 +191,9 @@ let g:ale_perl_perlcritic_showrules = 1
 let g:ale_sign_error = 'er'
 let g:ale_sign_warning = 'wr'
 let g:ale_fixers = {
+  \ '*': ['remove_trailing_lines', 'trim_whitespace'],
   \ 'javascript': ['eslint'],
-  \ 'perl' : ['perl','perlcritic']
+  \ 'perl' : ['perltidy']
   \ }
 au FileType perl set iskeyword-=:
 let g:ale_type_map = { 'perlcritic': {'ES': 'WS', 'E': 'W'} }
@@ -212,8 +209,6 @@ let g:deoplete#num_processes = 1
 " NERDTree confs
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-map <C-n> :NERDTreeToggle %<CR>
-map <leader>r :NERDTreeFind<cr>
 let NERDTreeMinimalUI=1
 let g:NERDTreeShowHidden=1
 
@@ -269,6 +264,13 @@ let g:tagbar_type_vue = {
 map <leader>ff :Files<CR>
 map <C-p> :FZF<CR>
 map <leader>h :History:<CR>
+map <C-n> :NERDTreeToggle %<CR>
+map <leader>r :NERDTreeFind<cr>
+map <leader>t :term<cr>
+" ctrl z to tagbar
+map <C-z> :TagbarToggle <CR>
+" C-\ - Open the definition in a new tab
+map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
 let NERDTreeHijackNetrw=1
 set tags=./.tags;/,.tags;/
@@ -302,3 +304,5 @@ command! -bang -nargs=* Ag
   \                 <bang>0)
 
 let $BASH_ENV = "~/.bash_aliases"
+
+command! -range=% Blame execute "!git blame -L " . <line1> . "," . <line2> . " %"
