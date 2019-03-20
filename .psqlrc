@@ -49,27 +49,33 @@
 
 -- Let Postgres format everything for you
 \x auto
--- 
+
+-- wrap long strings
+\pset format wrapped
+\pset columns 250
+\pset linestyle unicode
+
+
+--
 -- -- Show the application_name in pg_stat_activity.
 -- -- Good database citizens set this field so we know who to blame when a query hogs resources,
 -- -- or somebody stays idle in transaction for too long.
 -- set application_name to murat; commit;
--- 
+--
 -- -- Set bytea output to show as many ASCII letters as possible.
 -- -- (Handy if you are storing text whose encoding you do not know in bytea columns.)
 -- set bytea_output to escape; commit;
-\set get_billing_rules 'select billing_rule from billing_customers where billing_rule is not null group by billing_rule order by billing_rule;'
-\set get_billing_rules2 'select billing_rule, id from billing_customers where billing_rule is not null group by billing_rule, id order by billing_rule;'
+\set nt 'select * from nuclear_transaction nt where id = '
 \set s 'select * from '
-\set bc 'billing_customers'
-\set bi 'billing_invoices'
-\set bti 'billing_tshop_invoices'
-\set btii 'billing_tshop_invoice_items'
+\set sc 'select count(1) from '
+\set bc billing_customers
+\set bi billing_invoices
+\set bti billing_tshop_invoices
+\set btii billing_tshop_invoice_items
 \set id ' where id = '
-\set w ' where '
-\set o ' order by '
+\set w where
+\set o 'order by'
 \set oid ' order by id desc '
 \set oia ' order by id asc '
-\set l1 ' limit 1'
-\set l3 ' limit 3'
-
+\set l limit
+\set nx_cust 'select n.id, n.name, n.description, r.id retailerid, r.name retailer_name, b.id billing_customer_id, b.fmuser_alias fmusralias from nexus.customer_mapping nx left join nexus.customers n on nx.customer_id=n.id left join retailer r on r.id=nx.legacy_airtime_platform_client_id left join billing_customers b on b.id=nx.billing_customer_id where customer_id='

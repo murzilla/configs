@@ -42,11 +42,7 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 function sshm {
-    HOST=$1; ssh -l murat.baktiev $HOST;
-}
-
-function txlog {
-    TRX_ID=$1; mongo --quiet mongodb1.fixedandmobile.com/logs --eval "['3bill','topup'].forEach(function(coll){db[coll].find({trx_id:'$TRX_ID'}).limit(1).forEach(function(a){print(a.content)})})" | less
+    HOST=$1; ssh -i ~/.ssh/id_rsa_t2 -l murzilla $HOST;
 }
 
 # operations on blocks of code between matching patterns
@@ -80,6 +76,9 @@ function deletesub {
     grep -rl "sub $1" ${2:-.} | while read file; do echo "$file"; perl -pi -e "BEGIN{undef $/;} s!\bsub $1\b.*?^\}!!gsm" $file | cat -; done
 }
 
+function lf {
+    ls --color=none -ptr | grep -v / | tail -n 1;
+}
 # cat /tmp/functions2.txt | while read -r line; do echo "========$line====="; groupsubs "$line"; printf "=======/$line======\n\n"; done
 #function blocksmd5 {
 #    git grep -El "$1" | while read file; do echo "$file:"; sed -n -e "/$1/,/$2/{ p }" $file | awk '$1=$1'| md5sum -; done

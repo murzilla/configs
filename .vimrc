@@ -26,6 +26,7 @@ cmap w!! w !sudo tee % >/dev/null
 imap jj <ESC>
 let mapleader = "\<Space>"
 
+
 "filetype off            " required
 " GENERAL LAYOUT
 set laststatus=2        " always show status bar at the bottom
@@ -44,12 +45,21 @@ set pastetoggle=<F2>
 set shellcmdflag=-c " bash in vim
 
 " splits
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
+nnoremap <expr> <C-J> &diff ? ']c' : '<C-W>j'
+"nnoremap <C-J> <C-W><C-J>
+"nnoremap <C-K> <C-W><C-K>
+nnoremap <expr> <C-K> &diff ? '[c' : '<C-W>k'
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 " tabs
 nnoremap td  :tabclose<CR>
+" delete without yanking
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+" replace currently selected text with default register
+" without yanking it
+vnoremap <leader>p "_dP
+
 set splitbelow
 set splitright
 " SEARCH
@@ -228,7 +238,7 @@ let g:tagbar_type_perl = {
         \ 'u:uses:0:0',
         \ 'z:routes:0:0',
         \ 'r:requires:0:0',
-        \ 'o:ours:0:0',
+        \ 'g:ours:0:0',
         \ 'a:properties:0:0',
         \ 't:attributes:0:0',
         \ 'x:private:1:0',
@@ -268,7 +278,7 @@ map <C-n> :NERDTreeToggle %<CR>
 map <leader>r :NERDTreeFind<cr>
 map <leader>t :term<cr>
 " ctrl z to tagbar
-map <C-z> :TagbarToggle <CR>
+map <leader>z :TagbarToggle <CR>
 " C-\ - Open the definition in a new tab
 map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 
@@ -306,3 +316,13 @@ command! -bang -nargs=* Ag
 let $BASH_ENV = "~/.bash_aliases"
 
 command! -range=% Blame execute "!git blame -L " . <line1> . "," . <line2> . " %"
+
+function! OpenImg()
+  let url = expand('<cWORD>')
+  exec "!imgcat ".url
+endfunction
+map <Leader>i :call OpenImg()<CR>
+
+function! OpenURL(url)
+  exec('!imgcat '.url)
+endfunction

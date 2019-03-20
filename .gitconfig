@@ -1,11 +1,12 @@
 [user]
-  name = Murat Baktiev
-  email = murat.baktiev@transfer-to.com
+  name = Murzilla
+  email = murzilla@foo.bar
 [http]
   postBuffer = 157286400
 [alias]
   st = status
   ci = commit -v
+  bl = blame -wMC
   aa = add --all
   bv = branch -vv
   ba = branch -ra
@@ -15,21 +16,29 @@
   cm = commit -a --amend -C HEAD
   ci = commit -a -v
   co = checkout
-  di = diff
+  di = diff --ignore-space-at-eol -b -w --ignore-blank-lines --ws-error-highlight=old
   ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
   ld = log --pretty=format:"%C(yellow)%h\\ %C(green)%ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short --graph
   ls = log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   mm = merge --no-ff
   #st = status --short --branch
-  tg = tag -a 
+  tg = tag -a
   pu = push --tags
-  un = reset --hard HEAD  
+  un = reset --hard HEAD
   uh = reset --hard HEAD^
-[color]  
-  diff = auto  
-  status = auto  
-  branch = auto 
-[branch]  
+[pager]
+  log = diff-highlight | less
+  show = diff-highlight | less
+  diff = diff-highlight | less
+[interactive]
+  diffFilter = diff-highlight
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  ui = auto
+[branch]
   autosetuprebase = always
 [core]
   excludesfile = /home/murzilla/.gitignore

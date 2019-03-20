@@ -23,11 +23,16 @@ alias cdng='cd /usr/share/nginx' # cd nginx root
 alias gulpc='gulp --require coffee-script/register' # cd nginx root
 alias bejs='bundle exec jekyll serve' #--livereload
 alias tn='tmux new -s dev' # new tmux session
+alias tl='tmux new -s log' # new tmux session
+alias ts='tmux new -s sql' # new tmux session
 alias ta='tmux attach -t dev' # attach tmux session
+alias tal='tmux attach -t log' # attach tmux session
+alias tas='tmux attach -t sql' # attach tmux session
 alias pgstart='docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=pgpwd -d postgres'
 #alias odoodb='docker run -p 5432:5432 -d -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo --name db postgres'
 #alias odoostart='docker run -p 8069:8069 --name odoo --link db:db -t odoo'
-alias pgcli='docker run -it --rm --link db:postgres postgres psql -h postgres -U odoo'
+#alias pgcli='docker run -it --rm --link db:postgres postgres psql -h postgres -U odoo'
+alias pgcli='PGPASSWORD=pgpwd psql -h localhost -U postgres'
 alias ptagit="ctags --options=/home/murzilla/.ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=local --exclude=.git --exclude='*~' --extras=+q --languages=Perl --langmap=Perl:+.t"
 alias jtagit="ctags --options=/home/murzilla/.ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extras=q --languages=Javascript --langmap=Javascript:.js.es6.es.jsx.vue"
 #alias ctagit="ctags --append=no -f .tags --recurse --totals --exclude=blib --exclude=.git --exclude='*~' --extra=q --languages=Perl --langmap=Perl:+.t"
@@ -39,3 +44,6 @@ alias nonet='unshare -r -n'
 alias pllast='perlbrew use perl-5.26.1'
 alias pl10='perlbrew use perl-5.10.1'
 alias dit='docker exec -it '
+alias dprom='docker run -p 9090:9090 -v prometheus-data:/prometheus -v /opt/dev/t2/prometheus/prometheus.rules.yml:/etc/prometheus/prometheus.rules.yml -v /opt/dev/t2/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus'
+alias dpromalert='docker-compose -f prometheus-server/docker-compose.yaml -f alertmanager-server/docker-compose.yaml up'
+alias cleanswp=$'find . -name "*.sw[p|o]" -exec rm -rf \'{}\' +'

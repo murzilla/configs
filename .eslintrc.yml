@@ -12,7 +12,6 @@ extends:
 parserOptions:
   ecmaFeatures:
     ecmaVersion: 6
-    experimentalObjectRestSpread: true
     jsx: true
   sourceType: module
 plugins:
