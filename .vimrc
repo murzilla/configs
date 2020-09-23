@@ -184,7 +184,7 @@ vmap g<C-s> g<C-a>
 "set clipboard=unnamed
 "set redrawtime=10000
 
-" Don't remember what this is for
+" Copy/Paste in tmux panes
 vmap ty :Tyank
 map tp :Tput
 
