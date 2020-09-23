@@ -184,7 +184,7 @@ vmap g<C-s> g<C-a>
 "set clipboard=unnamed
 "set redrawtime=10000
 
-" increment numbers
+" Don't remember what this is for
 vmap ty :Tyank
 map tp :Tput
 
