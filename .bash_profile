@@ -2,15 +2,14 @@
 
 # Get the aliases and functions
 if [ -f ~/.bashrc ]; then
-  echo "load ~/.bashrc"
 	. ~/.bashrc
 fi
 
 # User specific environment and startup programs
+export PATH="$HOME/.plenv/bin:$PATH"
+eval "$(plenv init -)"
 
-PATH=$PATH:$HOME/.local/bin:$HOME/bin
-
-export PATH
-CDPATH=$CDPATH:/opt/current/
-echo "~/.bash_profile loaded"
-
+export PATH="$HOME/.cargo/bin:$PATH"
+export VISUAL="vim"
+export EDITOR="vim"
+export REVIEW_BASE="master"
