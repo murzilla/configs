@@ -108,6 +108,15 @@ function lo {
     $first_cmd `lf` $@;
 }
 
+function vdiff {
+    STR=$1; vimdiff "$STR" ~/$STR
+}
+
+function ndiff {
+    STR=$1; diff "$STR" ~/$STR
+}
+
+
 #Less options
 alias more='less'
 export PAGER=less
@@ -206,3 +215,10 @@ reattach_client() {
        fi
 }
 
+
+# Added by serverless binary installer
+export PATH="$HOME/.serverless/bin:$PATH"
+
+# tabtab source for packages
+# uninstall by removing these lines
+[ -f ~/.config/tabtab/__tabtab.bash ] && . ~/.config/tabtab/__tabtab.bash || true
