@@ -56,6 +56,7 @@ alias dpromalert='docker-compose -f prometheus-server/docker-compose.yaml -f ale
 alias cleanswp=$'find . -name "*.sw[p|o]" -exec rm -rf \'{}\' +'
 alias json='python3 -m json.tool | bat --language json'
 alias csv='pspg --csv -iX -s 17 --vertical-cursor --no-mouse'
+alias csvx='pspg -iX -s 17 --vertical-cursor --no-mouse'
 alias nexusdb='psql -U dtone -h 127.0.0.1 -p 5433 fm'
 alias sftporacle='sftp -i ~/.ssh/id_rsa_t2 digital-value-services@sftp.oracle.transferto.com'
 alias jupyter='~/anaconda3/bin/jupyter notebook --ip=0.0.0.0 --no-browser'

@@ -36,6 +36,10 @@ export DEV=1
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+function gitmf {
+    MF=$1; git st | grep modified: | awk '{print $2}' | sed -n $MF' p'
+}
+
 function jperl {
     (cd /current/jobs-script && cperl "$@")
 }

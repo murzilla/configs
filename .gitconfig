@@ -1,9 +1,29 @@
 [user]
-  name = Murzilla
-  email = murzilla@foo.bar
+  name = Murat Baktiev
+  email = murat.baktiev@dtone.com
 [http]
   postBuffer = 157286400
 [alias]
+
+  # list files which have changed since REVIEW_BASE
+  # (REVIEW_BASE defaults to 'master' in my zshrc)
+  files = !git diff --name-only $(git merge-base HEAD \"$REVIEW_BASE\")
+  # Same as above, but with a diff stat instead of just names
+  # (better for interactive use)
+  stm = !git diff --stat $(git merge-base HEAD \"$REVIEW_BASE\")
+  # NOTE: These aliases depend on the `git files` alias from
+  # a few sections ago!
+
+  # Open all files changed since REVIEW_BASE in Vim tabs
+  # Then, run fugitive's :Gdiff in each tab, and finally
+  # tell vim-gitgutter to show +/- for changes since REVIEW_BASE
+  review = !vim -p $(git files) +\"tabdo Gvdiff $REVIEW_BASE\" +\"let g:gitgutter_diff_base = '$REVIEW_BASE'\"
+
+  # Same as the above, except specify names of files as arguments,
+  # instead of opening all files:
+  # git reviewone foo.js bar.js
+  reviewone = !vim -p +\"tabdo Gvdiff $REVIEW_BASE\" +\"let g:gitgutter_diff_base = '$REVIEW_BASE'\"
+
   st = status
   ci = commit -v
   bl = blame -wMC
@@ -17,6 +37,9 @@
   ci = commit -a -v
   co = checkout
   di = diff --ignore-space-at-eol -b -w --ignore-blank-lines --ws-error-highlight=old
+  dim = "!git st | grep --color=auto modified: | awk '{print $2}' | sed -n $1p"
+  din = "!f() { git di `git status --porcelain | cut -d ' ' -f 3 | sed -n $1p`; }; f"
+  #foo = "!f() { echo "value passed as parameter is ${1}"; }; f"
   ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
   ld = log --pretty=format:"%C(yellow)%h\\ %C(green)%ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short --graph
   ls = log --pretty=format:"%C(green)%h\\ %C(yellow)[%ad]%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
@@ -27,6 +50,7 @@
   pu = push --tags
   un = reset --hard HEAD
   uh = reset --hard HEAD^
+  dt = difftool
 [pager]
   log = diff-highlight | less
   show = diff-highlight | less
@@ -38,8 +62,13 @@
   status = auto
   branch = auto
   ui = auto
+[diff]
+  tool=vimdiff
+[difftool]
+  prompt=false
 [branch]
   autosetuprebase = always
 [core]
   excludesfile = /home/murzilla/.gitignore
-	editor = vim
+  editor = vim
+	trustctime = false
