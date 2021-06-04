@@ -7,7 +7,7 @@ set shellcmdflag=-c                       " bash in vim
 let $BASH_ENV = "~/.bash_aliases"
 syn on                                    " syntax highlighting
 set redrawtime=10000                      " increase redrawtime to prevent syntax highlight breaking
-set encoding=utf-8
+set encoding=UTF-8
 set nocompatible                          " be iMproved, required
 set hidden                                " you can have unwritten changes to a file
 set fileencodings=utf-8,cp1251            " support cp1251
@@ -184,7 +184,7 @@ vmap g<C-s> g<C-a>
 "set clipboard=unnamed
 "set redrawtime=10000
 
-" Copy/Paste in tmux panes
+" Don't remember what this is for
 vmap ty :Tyank
 map tp :Tput
 
@@ -210,6 +210,7 @@ Plug 'mrk21/yaml-vim'
 "Plug 'editorconfig/editorconfig-vim'
 "Plug 'digitaltoad/vim-pug', { 'for': 'pug' }
 "Plug 'posva/vim-vue'
+Plug 'leafOfTree/vim-vue-plugin'
 "Plug 'w0rp/ale'
 Plug 'chrisbra/NrrwRgn'
 Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlight-all-pragmas moose test-more try-tiny' }
@@ -228,6 +229,7 @@ Plug 'liuchengxu/vim-clap'
 "Plug 'itchyny/lightline.vim'
 "Plug 'TaDaa/vimade'
 Plug 'tpope/vim-tbone'
+Plug 'airblade/vim-gitgutter'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -237,6 +239,7 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
@@ -249,7 +252,7 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 
-" DELOPLETE
+" DEOPLETE
 let g:deoplete#enable_at_startup = 1
 let g:jsx_ext_required = 0
 let g:deoplete#omni#input_patterns = {}
@@ -446,6 +449,9 @@ filetype plugin indent on
 autocmd FileType perl setlocal equalprg=perltidy\ -l=500\ -st
 " Git blame line
 command! -range=% Blame execute "!git blame -L " . <line1> . "," . <line2> . " %"
+
+"javascript
+autocmd FileType javascript,vue setlocal tabstop=2 shiftwidth=2 expandtab
 
 cnoremap <C-k> <Up>
 cnoremap <C-j> <Down>
